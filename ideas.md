@@ -12,6 +12,7 @@ based on % of identical tags
 - GCP for hosting 
 - Axios 
 - Hooks/Functional 
+- Tentatively Mongo/Atlas for db 
 
 ## TASK BREAKDOWN (general) 
 - Set up a facebook app 
