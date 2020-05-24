@@ -1,6 +1,5 @@
 import React from 'react';
-import { Grid, Typography, makeStyles, Divider } from '@material-ui/core'
-import USAMap from '../components/usa_map';
+import { Grid, Typography, makeStyles, Divider } from '@material-ui/core';
 import StateMap from '../components/state_map';
 import Subscriptions from '../components/subscriptions';
 import client from '../utils/api_client';

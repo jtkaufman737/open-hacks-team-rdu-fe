@@ -15,25 +15,25 @@ const mapStyles = makeStyles((theme) => {
     }
 });
 
-function USAMap() {
+function USAMap(props) {
     const [usTotals, setUsTotals] = React.useState({});
 
     const classes = mapStyles();
 
     const mapRef = React.useRef(null);
 
-    const renderMap = (ref) => {
-        maps.usa(ref);
+    const renderMap = (ref, data) => {
+        maps.usa(ref, data);
     };
     React.useEffect(() => {
         if (mapRef.current) {
-            renderMap(mapRef.current);
+            renderMap(mapRef.current, props.data);
         }
-    }, [mapRef]);
+    }, [mapRef, props.data]);
 
     React.useEffect(() => {
         function handleResize() {
-          renderMap(mapRef.current);
+          renderMap(mapRef.current, props.data);
         }
         
         window.addEventListener('resize', handleResize)
@@ -41,7 +41,7 @@ function USAMap() {
         return () => {
             window.removeEventListener('resize', handleResize);
         };
-    }, [mapRef]);
+    }, [mapRef, props.data]);
 
     const getData = async () => {
         try {

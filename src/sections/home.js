@@ -57,7 +57,7 @@ function Home() {
                 <Grid item xs={12} md={10}>
                     <Typography color="textSecondary" component="h1" variant="h3">Home</Typography>
                     <Divider className={classes.sectionDivider}/>
-                    <USAMap />
+                    <USAMap data={allCurrent} />
                 </Grid>
             </Grid>
             <Grid container justify="center">

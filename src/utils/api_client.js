@@ -105,12 +105,7 @@ const client = {
 
     },
     getCountryTotals: () => {
-        return Promise.resolve({
-            "positive_tests": 1424,
-            "total_tested": 2425,
-            "recovered": 546,
-            "deaths": 985
-        })
+        return fetch('/current/us').then((res) => res.json());
     },
     getStateList: () => {
         return Promise.resolve(stateList);
@@ -119,7 +114,8 @@ const client = {
         return Promise.resolve(subs);
     },
     getAllCurrent: () => {
-        return Promise.resolve(allCurrent);
+        // return Promise.resolve(allCurrent);
+        return fetch('/current/states').then((res) => res.json());
     },
     getSubsCurrent: () => {
         return Promise.resolve(subsCurrent);
