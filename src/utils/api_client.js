@@ -97,12 +97,50 @@ const subsCurrent = [
     },
 ];
 
+export class AuthError extends Error {}
+export class RequestError extends Error {}
+
 const client = {
     login: (username, password) => {
-
+        return fetch('/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username, password }),
+          }).then((res) => {
+            if (!res.ok) {
+                throw new RequestError('Req Error');
+            }
+            else {
+                return res;
+            }
+        });
     },
     logout: () => {
-
+        return fetch('/logout', { method: 'POST' }).then((res) => {
+            if (!res.ok) {
+                throw new RequestError('Req Error');
+            }
+            else {
+                return res;
+            }
+        });
+    },
+    getUser: () => {
+        return fetch('/user').then((res) => {
+            if (!res.ok) {
+                if (res.status === 401) {
+                    throw new AuthError('Auth Error');
+                }
+                else {
+                    throw new RequestError('Req Error');
+                }
+            }
+            else {
+                return res.json();
+            }
+        });
     },
     getCountryTotals: () => {
         return fetch('/current/us').then((res) => res.json());
@@ -111,14 +149,38 @@ const client = {
         return Promise.resolve(stateList);
     },
     getSubscriptions: () => {
-        return Promise.resolve(subs);
+        return fetch('/user').then((res) => {
+            if (!res.ok) {
+                if (res.status === 401) {
+                    throw new AuthError('Auth Error');
+                }
+                else {
+                    throw new RequestError('Req Error');
+                }
+            }
+            else {
+                return res.json().subscriptions;
+            }
+        });
     },
     getAllCurrent: () => {
         // return Promise.resolve(allCurrent);
         return fetch('/current/states').then((res) => res.json());
     },
     getSubsCurrent: () => {
-        return Promise.resolve(subsCurrent);
+        return fetch('/user/subscriptions/current').then((res) => {
+            if (!res.ok) {
+                if (res.status === 401) {
+                    throw new AuthError('Auth Error');
+                }
+                else {
+                    throw new RequestError('Req Error');
+                }
+            }
+            else {
+                return res.json().data;
+            }
+        });
     },
     setSubscriptions: (subs) => {
         return Promise.resolve();

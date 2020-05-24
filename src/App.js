@@ -1,11 +1,16 @@
 import React from 'react';
 import theme from './theme/mui-theme'
 import { MuiThemeProvider, makeStyles } from '@material-ui/core/styles';
-import { CssBaseline, AppBar, Toolbar, Typography } from '@material-ui/core';
+import { CssBaseline, AppBar, Toolbar, Typography, Button } from '@material-ui/core';
 // import './App.css';
 import Home from './sections/home';
 import { Router } from '@reach/router';
 import UserDashboard from './sections/user_dashboard';
+import Login from './sections/login';
+import client from './utils/api_client';
+import { AuthError } from './utils/api_client';
+import { navigate } from "@reach/router";
+
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -18,6 +23,9 @@ const useStyles = makeStyles((theme) => {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
+    },
+    appTitle: {
+      flex: 1,
     },
     hide: {
       display: 'none',
@@ -40,7 +48,47 @@ const useStyles = makeStyles((theme) => {
 });
 
 function App() {
+  const [currentUser, setCurrentUser] = React.useState(null);
+  const [loggedIn, setLoggedIn] = React.useState(false);
+
   const classes = useStyles();
+
+  const handleLogOut = () => {
+    client.logout().then(() => {
+      setCurrentUser(null);
+      setLoggedIn(false);
+    }).catch((e) => {
+      // TODO: Notify user logout failed
+    });
+  }
+  
+  const navToLogIn = () => {
+    navigate('/login');
+  }
+
+  // const navToAbout = () => {
+  //   navigate('/about');
+  // }
+
+  const getUser = () => {
+    client.getUser().then((user) => {
+      setCurrentUser(user);
+      setLoggedIn(true);
+    }).catch((err) => {
+      if (err instanceof AuthError) {
+        setLoggedIn(false);
+      }
+    });
+  }
+
+  const onLogin = () => {
+    getUser();
+    navigate('/dashboard');
+  }
+
+  React.useEffect(() => {
+    getUser();
+  }, [])
 
   return (
     <div className="App">
@@ -62,11 +110,12 @@ function App() {
                 <MenuIcon />
               </IconButton>
             } */}
-            <Typography variant="h6" noWrap>
+            <Typography variant="h6" noWrap className={classes.appTitle}>
               CoronAlert
             </Typography>
 
-            {/* <Button size="medium" variant="text" color="inherit" onClick={handleLogOut}>Log Out</Button> */}
+            {/* <Button size="large" variant="text" color="inherit" onClick={navToAbout}>About</Button> */}
+          { loggedIn ? <Button size="large" variant="text" color="inherit" onClick={handleLogOut}>Log Out</Button> : <Button size="large" variant="text" color="inherit" onClick={navToLogIn}>Log In</Button> }
           </Toolbar>
         </AppBar>
         <main className={classes.content}>
@@ -74,6 +123,7 @@ function App() {
           <Router>
             <Home path="/" />
             <UserDashboard path="/dashboard" />
+            <Login path="/login" onLogin={onLogin}/>
           </Router>
         </main>
       </MuiThemeProvider>
