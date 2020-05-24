@@ -18,23 +18,23 @@ const sectionStyles = makeStyles((theme) => {
 function Login(props) {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
-    
+
     const classes = sectionStyles();
 
     const handleUsernameChange = (e) => {
         setUsername(e.target.value);
       }
-    
+
       const handlePasswordChange = (e) => {
         setPassword(e.target.value);
       }
-    
+
       const handleInputKeyPress = (e) => {
           if (e.key === "Enter") {
               handleLogin();
           }
       };
-    
+
       const handleLogin = () => {
         if (username && password) {
             client.login(username, password).then(() => {
