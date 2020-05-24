@@ -1,32 +1,8 @@
 import React from 'react';
 import { Grid, Card, CardContent, Typography, makeStyles } from '@material-ui/core'
 import maps from '../utils/maps'
-
-const countStyles = makeStyles((theme) => {
-    return {
-        count: {
-            fontWeight: "bold",
-        }
-    }
-});
-
-function MetricCount(props) {
-
-    const classes = countStyles();
-
-    return (
-        <Grid item>
-            <Grid container direction="column">
-                <Grid item>
-                    <Typography color="textSecondary" variant="h4" align="center" className={classes.count}>{props.count}</Typography>
-                </Grid>
-                <Grid item>
-                    <Typography color="textSecondary" variant="h6" align="center">{props.metric}</Typography>
-                </Grid>
-            </Grid>
-        </Grid>
-    )
-}
+import MetricCount from './metric_count'
+import client from '../utils/api_client';
 
 const mapStyles = makeStyles((theme) => {
     return {
@@ -40,6 +16,8 @@ const mapStyles = makeStyles((theme) => {
 });
 
 function USAMap() {
+    const [usTotals, setUsTotals] = React.useState({});
+
     const classes = mapStyles();
 
     const mapRef = React.useRef(null);
@@ -65,6 +43,23 @@ function USAMap() {
         };
     }, [mapRef]);
 
+    const getData = async () => {
+        try {
+            const totals = await client.getCountryTotals();
+
+            setUsTotals(totals);
+
+        } catch(_) {
+            // TODO: some error handling
+        }
+    };
+
+    React.useEffect(() => {
+        getData();
+    }, []);
+
+    const nf = new Intl.NumberFormat();
+
     return (
         <Grid container item xs={12} component={Card} direction="column">
             <CardContent>
@@ -72,10 +67,10 @@ function USAMap() {
                 <Typography color="textPrimary" variant="h4" align="center">United States</Typography>
             </Grid>
             <Grid container item justify="space-evenly">
-                <MetricCount metric="Total Positives" count="9,999" />
-                <MetricCount metric="Total Tested" count="9,999" />
-                <MetricCount metric="Total Recovered" count="9,999" />
-                <MetricCount metric="Deaths" count="9,999" />
+                <MetricCount metric="Total Positives" count={usTotals.positive_tests ? nf.format(usTotals.positive_tests) : "--"} />
+                <MetricCount metric="Total Tested" count={usTotals.total_tested ? nf.format(usTotals.total_tested) : "--"} />
+                <MetricCount metric="Total Recovered" count={usTotals.recovered ? nf.format(usTotals.recovered) : "--"} />
+                <MetricCount metric="Deaths" count={usTotals.deaths ? nf.format(usTotals.deaths) : "--"} />
             </Grid>
             <div ref={mapRef} className={classes.mapContainer}>
             </div>

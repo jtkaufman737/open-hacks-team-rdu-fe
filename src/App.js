@@ -5,6 +5,7 @@ import { CssBaseline, AppBar, Toolbar, Typography } from '@material-ui/core';
 // import './App.css';
 import Home from './sections/home';
 import { Router } from '@reach/router';
+import UserDashboard from './sections/user_dashboard';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -72,6 +73,7 @@ function App() {
           <div className={classes.drawerToolbar} />
           <Router>
             <Home path="/" />
+            <UserDashboard path="/dashboard" />
           </Router>
         </main>
       </MuiThemeProvider>
