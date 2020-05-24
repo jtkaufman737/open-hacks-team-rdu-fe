@@ -58,6 +58,7 @@ function App() {
     client.logout().then(() => {
       setCurrentUser(null);
       setLoggedIn(false);
+      navigate('/');
     }).catch((e) => {
       // TODO: Notify user logout failed
     });
@@ -97,25 +98,10 @@ function App() {
       <MuiThemeProvider theme={theme}>
           <AppBar position="fixed">
             <Toolbar disableGutters className={classes.customToolbar}>
-
-              {/* { props.user &&
-                <IconButton
-                  color="inherit"
-                  aria-label="open drawer"
-                  onClick={handleDrawerOpen}
-                  edge="start"
-                  className={clsx(classes.menuButton, {
-                    [classes.hide]: open,
-                  })}
-                >
-                  <MenuIcon />
-                </IconButton>
-              } */}
               <Typography variant="h6" noWrap className={classes.appTitle}>
                 CoronAlert
               </Typography>
 
-              {/* <Button size="large" variant="text" color="inherit" onClick={navToAbout}>About</Button> */}
             { loggedIn ? <Button size="large" variant="text" color="inherit" onClick={handleLogOut}>Log Out</Button> : <Button size="large" variant="text" color="inherit" onClick={navToLogIn}>Log In</Button> }
             </Toolbar>
           </AppBar>
