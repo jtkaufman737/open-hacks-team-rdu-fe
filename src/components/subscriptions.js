@@ -46,7 +46,7 @@ function Subscriptions(props) {
 
     const submitSubs = async () => {
         try {
-            await client.setSubscriptions()
+            await client.setSubscriptions(selectedStates.map((el) => el.code ))
 
             props.onSubsUpdate();
         } catch(_) {
@@ -59,6 +59,9 @@ function Subscriptions(props) {
         try {
             let list = await client.getStateList();
             let subs = await client.getSubscriptions();
+
+            list = list.locations
+            subs = subs.data.subscriptions
 
             setSelectedStates(list.filter((val) => { return subs.includes(val.code); }));
             setUnselectedStates(list.filter((val) => { return !subs.includes(val.code); }));

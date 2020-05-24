@@ -146,7 +146,7 @@ const client = {
         return fetch('/current/us').then((res) => res.json());
     },
     getStateList: () => {
-        return Promise.resolve(stateList);
+        return fetch('/locations').then((res) => res.json());
     },
     getSubscriptions: () => {
         return fetch('/user').then((res) => {
@@ -159,7 +159,7 @@ const client = {
                 }
             }
             else {
-                return res.json().subscriptions;
+                return res.json();
             }
         });
     },
@@ -168,23 +168,35 @@ const client = {
         return fetch('/current/states').then((res) => res.json());
     },
     getSubsCurrent: () => {
-        return Promise.resolve([]);
-        // return fetch('/user/subscriptions/current').then((res) => {
-        //     if (!res.ok) {
-        //         if (res.status === 401) {
-        //             throw new AuthError('Auth Error');
-        //         }
-        //         else {
-        //             throw new RequestError('Req Error');
-        //         }
-        //     }
-        //     else {
-        //         return res.json().data;
-        //     }
-        // });
+        return fetch('/user/subscriptions/current').then((res) => {
+            if (!res.ok) {
+                if (res.status === 401) {
+                    throw new AuthError('Auth Error');
+                }
+                else {
+                    throw new RequestError('Req Error');
+                }
+            }
+            else {
+                return res.json();
+            }
+        });
     },
     setSubscriptions: (subs) => {
-        return Promise.resolve();
+        return fetch('/subscribe/locations', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ codes: subs }),
+          }).then((res) => {
+            if (!res.ok) {
+                throw new RequestError('Req Error');
+            }
+            else {
+                return res;
+            }
+        });
     }
 }
 
