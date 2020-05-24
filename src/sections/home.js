@@ -32,7 +32,7 @@ function Home() {
     const [displayed, setDisplayed] = React.useState([]);
 
     const loginStatus = React.useContext(LoginStatusContext)
-    
+
     const classes = sectionStyles();
 
     const onUpdate = (selected) => {
