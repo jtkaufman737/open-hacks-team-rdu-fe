@@ -10,6 +10,7 @@ import Login from './sections/login';
 import client from './utils/api_client';
 import { AuthError } from './utils/api_client';
 import { navigate } from "@reach/router";
+import LoginStatusContext from './utils/login_status_context';
 
 
 const useStyles = makeStyles((theme) => {
@@ -94,38 +95,40 @@ function App() {
     <div className="App">
       <CssBaseline />
       <MuiThemeProvider theme={theme}>
-        <AppBar position="fixed">
-          <Toolbar disableGutters className={classes.customToolbar}>
+          <AppBar position="fixed">
+            <Toolbar disableGutters className={classes.customToolbar}>
 
-            {/* { props.user &&
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                edge="start"
-                className={clsx(classes.menuButton, {
-                  [classes.hide]: open,
-                })}
-              >
-                <MenuIcon />
-              </IconButton>
-            } */}
-            <Typography variant="h6" noWrap className={classes.appTitle}>
-              CoronAlert
-            </Typography>
+              {/* { props.user &&
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  edge="start"
+                  className={clsx(classes.menuButton, {
+                    [classes.hide]: open,
+                  })}
+                >
+                  <MenuIcon />
+                </IconButton>
+              } */}
+              <Typography variant="h6" noWrap className={classes.appTitle}>
+                CoronAlert
+              </Typography>
 
-            {/* <Button size="large" variant="text" color="inherit" onClick={navToAbout}>About</Button> */}
-          { loggedIn ? <Button size="large" variant="text" color="inherit" onClick={handleLogOut}>Log Out</Button> : <Button size="large" variant="text" color="inherit" onClick={navToLogIn}>Log In</Button> }
-          </Toolbar>
-        </AppBar>
-        <main className={classes.content}>
-          <div className={classes.drawerToolbar} />
-          <Router>
-            <Home path="/" />
-            <UserDashboard path="/dashboard" />
-            <Login path="/login" onLogin={onLogin}/>
-          </Router>
-        </main>
+              {/* <Button size="large" variant="text" color="inherit" onClick={navToAbout}>About</Button> */}
+            { loggedIn ? <Button size="large" variant="text" color="inherit" onClick={handleLogOut}>Log Out</Button> : <Button size="large" variant="text" color="inherit" onClick={navToLogIn}>Log In</Button> }
+            </Toolbar>
+          </AppBar>
+          <main className={classes.content}>
+            <div className={classes.drawerToolbar} />
+            <LoginStatusContext.Provider value={{loggedIn: loggedIn}}>
+              <Router>
+                <Home path="/" />
+                <UserDashboard path="/dashboard" />
+                <Login path="/login" onLogin={onLogin}/>
+              </Router>
+            </LoginStatusContext.Provider>
+          </main>
       </MuiThemeProvider>
     </div>
   );

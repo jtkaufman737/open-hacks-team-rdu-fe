@@ -4,6 +4,8 @@ import USAMap from '../components/usa_map';
 import StateMap from '../components/state_map';
 import client from '../utils/api_client';
 import StateFilter from '../components/state_filter';
+import { Link } from '@reach/router';
+import LoginStatusContext from '../utils/login_status_context'
 
 const sectionStyles = makeStyles((theme) => {
     return {
@@ -14,6 +16,13 @@ const sectionStyles = makeStyles((theme) => {
         },
         withBottomMargin: {
             marginBottom: "1.5rem",
+        },
+        simpleLink: {
+            textDecoration: "none",
+            color: "#CCCCCC",
+            '&:hover': {
+                color: theme.palette.primary.main,
+            }
         }
     }
 });
@@ -21,6 +30,8 @@ const sectionStyles = makeStyles((theme) => {
 function Home() {
     const [allCurrent, setAllCurrent] = React.useState([]);
     const [displayed, setDisplayed] = React.useState([]);
+
+    const loginStatus = React.useContext(LoginStatusContext)
     
     const classes = sectionStyles();
 
@@ -55,7 +66,14 @@ function Home() {
         <React.Fragment>
             <Grid container justify="center" className={classes.withBottomMargin}>
                 <Grid item xs={12} md={10}>
-                    <Typography color="textSecondary" component="h1" variant="h3">Home</Typography>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Typography color="textSecondary" component="h1" variant="h3">Home</Typography>
+                        </Grid>
+                        { loginStatus.loggedIn && <Grid item>
+                            <Link to="dashboard" className={classes.simpleLink}><Typography color="inherit" component="h1" variant="h3">My Dashboard</Typography></Link>
+                        </Grid> }
+                    </Grid>
                     <Divider className={classes.sectionDivider}/>
                     <USAMap data={allCurrent} />
                 </Grid>

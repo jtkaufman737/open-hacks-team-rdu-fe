@@ -3,6 +3,7 @@ import { Grid, Typography, makeStyles, Divider } from '@material-ui/core';
 import StateMap from '../components/state_map';
 import Subscriptions from '../components/subscriptions';
 import client from '../utils/api_client';
+import { Link } from '@reach/router';
 
 const sectionStyles = makeStyles((theme) => {
     return {
@@ -13,6 +14,13 @@ const sectionStyles = makeStyles((theme) => {
         },
         withBottomMargin: {
             marginBottom: "1.5rem",
+        },
+        simpleLink: {
+            textDecoration: "none",
+            color: "#CCCCCC",
+            '&:hover': {
+                color: theme.palette.primary.main,
+            }
         }
     }
 });
@@ -46,7 +54,14 @@ function UserDashboard() {
         <React.Fragment>
             <Grid container justify="center" className={classes.withBottomMargin}>
                 <Grid item xs={12} md={10}>
-                    <Typography color="textSecondary" component="h1" variant="h3"> My Dashboard</Typography>
+                    <Grid container justify="space-between">
+                        <Grid item>
+                            <Link to="/" className={classes.simpleLink}><Typography color="inherit" component="h1" variant="h3">Home</Typography></Link>
+                        </Grid>
+                        <Grid item>
+                            <Typography color="textSecondary" component="h1" variant="h3">My Dashboard</Typography>
+                        </Grid>
+                    </Grid>
                     <Divider className={classes.sectionDivider}/>
                 </Grid>
             </Grid>

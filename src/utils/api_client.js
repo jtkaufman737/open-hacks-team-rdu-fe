@@ -168,19 +168,20 @@ const client = {
         return fetch('/current/states').then((res) => res.json());
     },
     getSubsCurrent: () => {
-        return fetch('/user/subscriptions/current').then((res) => {
-            if (!res.ok) {
-                if (res.status === 401) {
-                    throw new AuthError('Auth Error');
-                }
-                else {
-                    throw new RequestError('Req Error');
-                }
-            }
-            else {
-                return res.json().data;
-            }
-        });
+        return Promise.resolve([]);
+        // return fetch('/user/subscriptions/current').then((res) => {
+        //     if (!res.ok) {
+        //         if (res.status === 401) {
+        //             throw new AuthError('Auth Error');
+        //         }
+        //         else {
+        //             throw new RequestError('Req Error');
+        //         }
+        //     }
+        //     else {
+        //         return res.json().data;
+        //     }
+        // });
     },
     setSubscriptions: (subs) => {
         return Promise.resolve();
