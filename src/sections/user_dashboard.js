@@ -27,7 +27,7 @@ const sectionStyles = makeStyles((theme) => {
 
 function UserDashboard() {
     const [allCurrent, setAllCurrent] = React.useState([]);
-    
+
     const classes = sectionStyles();
 
     const getSubsCurrent = async () => {
@@ -76,6 +76,13 @@ function UserDashboard() {
                                     </Grid>
                                 )
                             }) }
+                            {
+                              !allCurrent.length
+                                ? <Grid item xs={12} className={classes.withBottomMargin}>
+                                    <h2>Select states from the right to save them to your personalized dashboard.</h2>
+                                  </Grid>
+                                : ''
+                            }
                         </Grid>
                     </Grid>
                     <Grid item xs={12} md={4}>
