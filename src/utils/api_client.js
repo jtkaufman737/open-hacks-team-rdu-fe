@@ -100,9 +100,11 @@ const subsCurrent = [
 export class AuthError extends Error {}
 export class RequestError extends Error {}
 
+const baseUrl = window.location.hostname === 'localhost' ? window.location.origin : 'http://api.ronalert.com/'
+
 const client = {
     login: (username, password) => {
-        return fetch('http://api.ronalert.com/login', {
+        return fetch(`${baseUrl}/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -118,7 +120,7 @@ const client = {
         });
     },
     logout: () => {
-        return fetch('http://api.ronalert.com/logout', { method: 'POST' }).then((res) => {
+        return fetch(`${baseUrl}/logout`, { method: 'POST' }).then((res) => {
             if (!res.ok) {
                 throw new RequestError('Req Error');
             }
@@ -127,23 +129,23 @@ const client = {
             }
         });
     },
-    signup: (username, password, email, phone) => {
-      return fetch('http://api.ronalert.com/signup', {
+    signup: (data) => {
+      return fetch('/signup', {
         method: 'POST',
         headers: {
          'Content-Type':'application/json'
        },
-        body: JSON.stringify({ username, password, email, phone })
+        body: JSON.stringify(data)
       }).then((res) => {
         if(!res.ok) {
-          throw new RequestError('Req Error');
+          console.log(res)
         } else {
           return res
         }
       })
     },
     getUser: () => {
-        return fetch('http://api.ronalert.com/user').then((res) => {
+        return fetch('/user').then((res) => {
             if (!res.ok) {
                 if (res.status === 401) {
                     throw new AuthError('Auth Error');
@@ -158,13 +160,13 @@ const client = {
         });
     },
     getCountryTotals: () => {
-        return fetch('http://api.ronalert.com/current/us').then((res) => res.json());
+        return fetch('/current/us').then((res) => res.json());
     },
     getStateList: () => {
-        return fetch('http://api.ronalert.com/locations').then((res) => res.json());
+        return fetch('/locations').then((res) => res.json());
     },
     getSubscriptions: () => {
-        return fetch('http://api.ronalert.com/user').then((res) => {
+        return fetch('/user').then((res) => {
             if (!res.ok) {
                 if (res.status === 401) {
                     throw new AuthError('Auth Error');
@@ -179,11 +181,11 @@ const client = {
         });
     },
     getAllCurrent: () => {
-        http://api.ronalert.com/http://api.ronalert.com/ return Promise.resolve(allCurrent);
-        return fetch('http://api.ronalert.com/current/states').then((res) => res.json());
+        // return Promise.resolve(allCurrent);
+        return fetch('/current/states').then((res) => res.json());
     },
     getSubsCurrent: () => {
-        return fetch('http://api.ronalert.com/user/subscriptions/current').then((res) => {
+        return fetch('/user/subscriptions/current').then((res) => {
             if (!res.ok) {
                 if (res.status === 401) {
                     throw new AuthError('Auth Error');
@@ -198,7 +200,7 @@ const client = {
         });
     },
     setSubscriptions: (subs) => {
-        return fetch('http://api.ronalert.com/subscribe/locations', {
+        return fetch('/subscribe/locations', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

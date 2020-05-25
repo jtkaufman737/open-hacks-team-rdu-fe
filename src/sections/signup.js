@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Card, CardHeader, CardContent, CardActions, TextField, Button, makeStyles, Divider } from '@material-ui/core';
+import { Grid, Card, CardHeader, CardContent, CardActions, TextField, Button, makeStyles, Divider, FormLabel, FormControl, FormGroup, FormHelperText, Checkbox, FormControlLabel } from '@material-ui/core';
 import client from '../utils/api_client';
 
 const sectionStyles = makeStyles((theme) => {
@@ -11,6 +11,12 @@ const sectionStyles = makeStyles((theme) => {
         },
         withBottomMargin: {
             marginBottom: "1.5rem",
+        },
+        formControl:  {
+            marginTop: theme.spacing(5),
+        },
+        checkBoxGroup: {
+            marginTop: theme.spacing(2)
         }
     }
 });
@@ -20,6 +26,10 @@ function Signup(props) {
   const [email, setEmail] = React.useState("");
   const [phone, setPhone] = React.useState("");
   const [password,setPassword] = React.useState("");
+  const [notifications, setNotifications] = React.useState({
+    textEnabled: false,
+    emailEnabled: false
+  })
 
   const classes = sectionStyles();
 
@@ -39,6 +49,10 @@ function Signup(props) {
     setEmail(e.target.value)
   }
 
+  const handleNotificationsChange = (e) => {
+    setNotifications({ ...notifications, [e.target.name]: e.target.checked })
+  }
+
   const handleInputKeyPress = (e) => {
       if (e.key === "Enter") {
           handleSignup();
@@ -47,11 +61,17 @@ function Signup(props) {
 
   const handleSignup = () => {
     if(username && password && email && phone) {
-      client.signup(username, password, email, phone).then(() => {
+      let data = { username, password, email, phone }
+      data.textEnabled = notifications.textEnabled
+      data.emailEnabled = notifications.emailEnabled
+
+      client.signup(data).then(() => {
         props.onSignup();
       })
     }
   }
+
+  const { textEnabled, emailEnabled } = notifications
 
   return(
     <React.Fragment>
@@ -103,6 +123,19 @@ function Signup(props) {
                     onKeyPress={handleInputKeyPress}
                     type="text"
                   />
+                 <FormControl component="fieldset" className={classes.formControl}>
+                    <FormLabel component="legend">Choose your subscription options to receive Coronavirus updates in specific locations.</FormLabel>
+                  <FormGroup className={classes.checkBoxGroup}>
+                      <FormControlLabel
+                        control={<Checkbox checked={textEnabled} onChange={handleNotificationsChange} name="textEnabled" />}
+                        label="Text Alerts Enabled"
+                      />
+                      <FormControlLabel
+                        control={<Checkbox checked={emailEnabled} onChange={handleNotificationsChange} name="emailEnabled" />}
+                        label="Email Alerts Enabled"
+                      />
+                    </FormGroup>
+                  </FormControl>
                 </CardContent>
                 <Divider />
                 <CardActions>
